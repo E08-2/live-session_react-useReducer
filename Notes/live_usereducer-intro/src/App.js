@@ -19,7 +19,10 @@ import "./App.css";
 // * Step 2
 // Create an initial state for the App component
 // For now, this only has one property ("count"). In a real use case, it would have more!
-const initialState = { count: 0 }
+const initialState = { 
+    count: 0,
+    message: ""
+}
 
 // * Step 3
 // Create a reducer
@@ -33,9 +36,15 @@ const reducer = (state, action) => {
     switch(action.type) {
         case "increment":
             // The return value will be your new state value
-            return { count: state.count + 1 }
+            return { ...state, count: state.count + 1 }
         case "decrement":
-            return { count: state.count - 1 }
+            return { ...state, count: state.count - 1 }
+        case "multiplyByTen":
+            return { ...state, count: state.count * 10 }
+        case "reset":
+            return { ...state, count: 0 }
+        case "updateMessage":
+            return { ...state, message: action.payload }
         default:
             return state;
     }
@@ -71,11 +80,30 @@ const App = () => {
         dispatch({ type: "decrement" })
     }
 
+    const multiplyBy10 = () => {
+        dispatch({ type: "multiplyByTen" })
+    }
+
+    const resetCount = () => {
+        dispatch({ type: "reset" })
+    }
+
+    // Use an action with "type" and "payload" properties to update state.message
+    const updateMessage = event => {
+        // payload = "data we want to give to the reducer function, which it can use"
+        dispatch({ type: "updateMessage", payload: event.target.value })
+    }
+
     return (
         <div>
             <div>Count: {state.count}</div>
             <button onClick={addOne}>+</button>
             <button onClick={subtractOne}>-</button>
+            <button onClick={multiplyBy10} >*10</button>
+            <button onClick={resetCount} >Reset</button>
+            <div>
+                <input placeholder="Type a message!" value={state.message} onChange={updateMessage}></input>
+            </div>
         </div>
     )
 }
